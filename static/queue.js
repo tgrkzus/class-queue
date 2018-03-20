@@ -1,5 +1,4 @@
-short_names = []
-long_names = []
+names = []
 
 var socket;
 
@@ -10,6 +9,16 @@ function setup() {
     //     socket.emit('add_name', {name: "Tom"});
     // });
 
+
+    socket.on('add_name', add_name);
+
+}
+
+function refresh_list() {
+    $("#list").empty();
+    for (var i = 0; i < names.length; i++) {
+        $("#list").append('<p>' + names[i]['name'] + '</p>');
+    }
 }
 
 function register_new_name() {
@@ -17,25 +26,16 @@ function register_new_name() {
     socket.emit('add_name', {name: name});
 }
 
-var add_name = function(type, id, name) {
-    if (type == "short") {
-        short_names.push({'id': id, 'name': name});
-    }
-
-    if (type == "long") {
-        long_names.push({'id': id, 'name': name});
-    }
+var add_name = function(event) {
+    names.push({'id': event['id'], 'name': event['name']});
+    refresh_list()
 }
 
-var remove_name = function(type, id) {
-    if (type == "short") {
-        for (var i = 0; i < short_names.length; i++) {
-            if (short_names[i]["id"] == id) {
-                short_names.splice(short_names.indexof(short_names[i], 1));
-            }
+var remove_name = function(evemt) {
+    for (var i = 0; i < names.length; i++) {
+        if (names[i]["id"] == id) {
+            names.splice(names.indexof(names[i], 1));
         }
     }
-    if (type == "long") {
-
-    }
+    refresh_list();
 }
