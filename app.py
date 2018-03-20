@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit
 app = Flask(__name__, static_folder="static")
 
 socketio = SocketIO(app)
@@ -18,14 +18,17 @@ def add_name(json):
     global queue
     studentid = currentId
     currentId += 1
-    queue.append({"id": studentid, "name": json["name"]})
+    data = {"id": studentid, "name": json["name"]}
+    queue.append(data)
+    emit('add_name', data, broadcast = True)
     print("received json: " + str(json))
 
 @socketio.on('remove_name')
 def remove_name(id):
+    global queue
     for i in range(0,len(queue)):
         if id == queue[i]["id"]:
-            emit('remove_name', queue.pop(i), boradcast = True)
+            emit('remove_name', queue.pop(i), broadcast = True)
 
 @app.route("/")
 def hello():
