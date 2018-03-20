@@ -14,6 +14,8 @@ queue = []
 
 @socketio.on('add_name')
 def add_name(json):
+    global currentId
+    global queue
     studentid = currentId
     currentId += 1
     queue.append({"id": studentid, "name": json["name"]})
