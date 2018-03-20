@@ -1,12 +1,20 @@
 short_names = []
 long_names = []
 
-function setup() {
-    var socket = io.connect('http://' + document.domain + ':' + location.port);
+var socket;
 
-    socket.on('connect', function() {
-        socket.emit('data', {data: "Hello"});
-    });
+function setup() {
+    socket = io.connect('http://' + document.domain + ':' + location.port);
+
+    // socket.on('connect', function() {
+    //     socket.emit('add_name', {name: "Tom"});
+    // });
+
+}
+
+function register_new_name() {
+    var name = $('#name-input').val()
+    socket.emit('add_name', {name: name});
 }
 
 var add_name = function(type, id, name) {
